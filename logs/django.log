@@ -1,0 +1,7 @@
+Performing system checks...
+
+System check identified no issues (0 silenced).
+September 16, 2025 - 22:14:46
+Django version 4.2.8, using settings 'skydesign.settings'
+Starting ASGI/Daphne version 4.0.0 development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.

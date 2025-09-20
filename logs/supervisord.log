@@ -1,0 +1,6 @@
+2025-09-16 19:14:42,917 INFO RPC interface 'supervisor' initialized
+2025-09-16 19:14:42,917 CRIT Server 'unix_http_server' running without any HTTP authentication checking
+2025-09-16 19:14:42,919 INFO daemonizing the supervisord process
+2025-09-16 19:14:42,920 INFO supervisord started with pid 3815
+2025-09-16 19:14:43,924 INFO spawned: 'django' with pid 3818
+2025-09-16 19:14:44,926 INFO success: django entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)

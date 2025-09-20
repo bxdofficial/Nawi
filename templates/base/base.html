@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}منصة سكاي للتصميم{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    
+    <!-- Arabic Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        :root {
+            /* Sky Theme Colors - Day Mode */
+            --sky-50: #F0F9FF;
+            --sky-100: #E0F2FE;
+            --sky-200: #BAE6FD;
+            --sky-300: #7DD3FC;
+            --sky-400: #38BDF8;
+            --sky-500: #0EA5E9;
+            --sky-600: #0284C7;
+            --sky-700: #0369A1;
+            --sky-800: #075985;
+            --sky-900: #0C4A6E;
+            
+            /* Sunset/Night Colors */
+            --indigo-500: #6366F1;
+            --purple-500: #A855F7;
+            --pink-500: #EC4899;
+            
+            /* Aurora Gradient */
+            --aurora-1: #00D4FF;
+            --aurora-2: #7C3AED;
+            --aurora-3: #FF006E;
+        }
+        
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--sky-100) 0%, var(--sky-200) 50%, var(--sky-300) 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Glassmorphism Effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+        }
+        
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Glow Effects */
+        .glow {
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.5),
+                        0 0 40px rgba(56, 189, 248, 0.3),
+                        0 0 60px rgba(56, 189, 248, 0.1);
+        }
+        
+        .glow-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .glow-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.6),
+                        0 0 50px rgba(56, 189, 248, 0.4),
+                        0 0 75px rgba(56, 189, 248, 0.2);
+        }
+        
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Particle Background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: particle-float 20s infinite linear;
+        }
+        
+        @keyframes particle-float {
+            from {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+        
+        /* Morphing Gradient Background */
+        @keyframes morphing {
+            0% {
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+                background: linear-gradient(45deg, var(--sky-300), var(--sky-500));
+            }
+            50% {
+                border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+                background: linear-gradient(45deg, var(--sky-400), var(--indigo-500));
+            }
+            100% {
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+                background: linear-gradient(45deg, var(--sky-300), var(--sky-500));
+            }
+        }
+        
+        .morphing-shape {
+            animation: morphing 15s ease-in-out infinite;
+            filter: blur(60px);
+            opacity: 0.7;
+        }
+        
+        /* Button Styles */
+        .btn-sky {
+            background: linear-gradient(135deg, var(--sky-400), var(--sky-600));
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-sky::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn-sky:hover::before {
+            left: 100%;
+        }
+        
+        .btn-sky:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.4);
+        }
+        
+        /* Card Styles */
+        .card-sky {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.9), 
+                rgba(224, 242, 254, 0.9));
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .card-sky:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(14, 165, 233, 0.2);
+        }
+        
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--sky-400), var(--sky-600));
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--sky-500), var(--sky-700));
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Particle Background -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Morphing Shapes Background -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div class="morphing-shape absolute top-20 left-10 w-96 h-96"></div>
+        <div class="morphing-shape absolute bottom-20 right-10 w-80 h-80" style="animation-delay: 5s;"></div>
+        <div class="morphing-shape absolute top-1/2 left-1/2 w-64 h-64" style="animation-delay: 10s;"></div>
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 px-6 py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-reverse space-x-6">
+                <a href="/" class="text-2xl font-bold bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-transparent">
+                    منصة سكاي للتصميم
+                </a>
+                <div class="hidden md:flex items-center space-x-reverse space-x-4">
+                    <a href="/" class="hover:text-sky-600 transition">الرئيسية</a>
+                    <a href="/designs" class="hover:text-sky-600 transition">المعرض</a>
+                    <a href="/requests/create" class="hover:text-sky-600 transition">طلب تصميم</a>
+                    <a href="/games" class="hover:text-sky-600 transition">الألعاب</a>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-reverse space-x-4">
+                {% if user.is_authenticated %}
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="flex items-center space-x-reverse space-x-2 glass px-4 py-2 rounded-full glow-hover">
+                            <span>{{ user.name|default:user.username }}</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        
+                        <div x-show="open" @click.away="open = false" x-transition
+                             class="absolute left-0 mt-2 w-48 glass rounded-xl overflow-hidden">
+                            <a href="/dashboard" class="block px-4 py-2 hover:bg-sky-100 transition">لوحة التحكم</a>
+                            <a href="/profile" class="block px-4 py-2 hover:bg-sky-100 transition">الملف الشخصي</a>
+                            <a href="/my-designs" class="block px-4 py-2 hover:bg-sky-100 transition">تصاميمي</a>
+                            {% if user.role == 'ADMIN' or user.role == 'MANAGER' %}
+                                <a href="/admin" class="block px-4 py-2 hover:bg-sky-100 transition">إدارة النظام</a>
+                            {% endif %}
+                            <hr class="border-sky-200">
+                            <a href="/logout" class="block px-4 py-2 hover:bg-red-100 text-red-600 transition">تسجيل الخروج</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Notifications -->
+                    <button class="relative glass p-2 rounded-full glow-hover">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                    </button>
+                {% else %}
+                    <a href="/accounts/login" class="btn-sky">تسجيل الدخول</a>
+                    <a href="/accounts/signup" class="glass px-4 py-2 rounded-full glow-hover">إنشاء حساب</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 relative z-10">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="glass mt-20 py-8 relative z-10">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-sky-700">عن المنصة</h3>
+                    <p class="text-gray-600">منصة سكاي للتصميم - حيث الإبداع يلتقي بالتميز</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-sky-700">روابط سريعة</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/about" class="hover:text-sky-600 transition">من نحن</a></li>
+                        <li><a href="/services" class="hover:text-sky-600 transition">خدماتنا</a></li>
+                        <li><a href="/pricing" class="hover:text-sky-600 transition">الأسعار</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-sky-700">الدعم</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/help" class="hover:text-sky-600 transition">مركز المساعدة</a></li>
+                        <li><a href="/contact" class="hover:text-sky-600 transition">اتصل بنا</a></li>
+                        <li><a href="/faq" class="hover:text-sky-600 transition">الأسئلة الشائعة</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-sky-700">تابعنا</h3>
+                    <div class="flex space-x-reverse space-x-4">
+                        <a href="#" class="glass p-2 rounded-full glow-hover">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="glass p-2 rounded-full glow-hover">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="glass p-2 rounded-full glow-hover">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-sky-200 text-center text-gray-600">
+                <p>&copy; 2024 منصة سكاي للتصميم. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Particles JavaScript -->
+    <script>
+        // Create particles
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 30;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.width = Math.random() * 10 + 5 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = Math.random() * 10 + 15 + 's';
+            particlesContainer.appendChild(particle);
+        }
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
